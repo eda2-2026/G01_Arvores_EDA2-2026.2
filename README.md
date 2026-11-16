@@ -16,7 +16,6 @@ Assista ao vídeo explicativo detalhando as decisões arquiteturais do projeto, 
 
 [![Apresentação do Projeto](https://img.youtube.com/vi/INSERIR_ID_DO_VIDEO/maxresdefault.jpg)](https://youtu.be/INSERIR_ID_DO_VIDEO)
 
-> *Nota: Substitua `INSERIR_ID_DO_VIDEO` pelo ID real do seu vídeo no YouTube.*
 
 
 ## Descrição do projeto
