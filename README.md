@@ -1,10 +1,30 @@
 # Orquestrador de Processamento de Documentos IA
 
+
+**Disciplina:** Estruturas de Dados 2 — 2026.2  
+**Trabalho:** Trabalho 3 — Aplicação Integrada de Árvores (Min-Heap, Árvore AVL e Árvore Rubro-Negra) 
+
+## Aluno
+
+| Matrícula | Nome |
+|---|---|
+| 20/2046040 | Dara Maria Barbosa de Sousa |
+
+## Vídeo de Apresentação
+
+Assista ao vídeo explicativo detalhando as decisões arquiteturais do projeto, a implementação das três estruturas de dados sob a metodologia TDD e a demonstração do fluxo na interface Streamlit:
+
+[![Apresentação do Projeto](https://img.youtube.com/vi/INSERIR_ID_DO_VIDEO/maxresdefault.jpg)](https://youtu.be/INSERIR_ID_DO_VIDEO)
+
+> *Nota: Substitua `INSERIR_ID_DO_VIDEO` pelo ID real do seu vídeo no YouTube.*
+
+
+## Descrição do projeto
 Este projeto implementa um simulador interativo de um pipeline de microsserviços voltado para o processamento assíncrono de documentos (como extração via OCR e LLM). Ele foi construído com foco acadêmico e arquitetural para demonstrar a aplicação prática e a interação entre três estruturas de dados avançadas: **Min-Heap**, **Árvore Red-Black** e **Árvore AVL**.
 
 A interface visual, desenvolvida em Streamlit, simula um painel Kanban em tempo real, permitindo visualizar como os dados trafegam pela memória do sistema durante as etapas de enfileiramento, alocação de processamento e armazenamento em cache.
 
----
+
 
 ## Estruturas de Dados Utilizadas e Arquitetura
 
@@ -23,14 +43,14 @@ O núcleo do sistema orquestra o ciclo de vida dos documentos através de três 
 *   **Objetivo:** Atuar como um banco de dados em memória para registrar os documentos já finalizados e prevenir reprocessamento de arquivos duplicados.
 *   **Por que AVL?** Diferente do *Pool* de processos, o histórico de documentos sofre inserções apenas no final do ciclo, mas é **consultado massivamente** toda vez que um novo documento chega (para checar se ele já existe). Como a AVL é estritamente balanceada (fator de balanceamento -1, 0 ou 1), ela oferece a melhor performance matemática possível para buscas $O(\log n)$, sendo a estrutura ideal para *Read-Heavy operations*.
 
----
+
 
 ## Estrutura do Projeto
 
 ```text
 doc_orchestrator/
 ├── app.py                            # Ponto de entrada do dashboard Streamlit
-├── style.css                         # Estilização Kanban e indicadores de status
+├── style.css                         # Estilização 
 ├── requirements.txt                  # Dependências do projeto
 ├── src/
 │   ├── __init__.py
@@ -110,3 +130,11 @@ A barra lateral esquerda fornece os controles de operação manual:
 2. **Alocar Worker:** Simula a inicialização de um *background job*. O motor extrai $O(1)$ o documento mais urgente da Min-Heap e o insere em $O(\log n)$ na Árvore Red-Black atrelando a um operário digital. O UI exibirá a cor real do nó (Vermelho ou Preto) calculada pela árvore no momento.
 3. **Finalizar Processo:** Escolhe um *Worker* ativo aleatoriamente, faz o *soft-delete* dele na Red-Black e insere os metadados do documento no Cache Estrito da Árvore AVL, sinalizando o fim do ciclo.
 
+## Referências
+* CORMEN, T. H.; LEISERSON, C. E.; RIVEST, R. L.; STEIN, C. Algoritmos: Teoria e Prática. 3. ed. Rio de Janeiro: Elsevier, 2012. Capítulos 12, 13 e 14.
+
+* SERRANO, Maurício. Material didático da disciplina Estruturas de Dados 2. Universidade de Brasília (UnB FGA), 2026.
+
+* PYTHON SOFTWARE FOUNDATION. Python Documentation. Disponível em: https://docs.python.org/3/
+
+* STREAMLIT INC. Streamlit Documentation. Disponível em: https://docs.streamlit.io/
