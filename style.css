@@ -1,0 +1,77 @@
+/* style.css */
+/* Estilos base dos Cards do Kanban */
+.kanban-card {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #262730; 
+    color: white;
+    font-family: sans-serif;
+}
+.kanban-card h4 { margin: 0 0 10px 0; font-size: 16px; }
+.kanban-card p { margin: 0; font-size: 14px; color: #cccccc; }
+
+/* Indicadores de Status Profissionais (Bolinhas coloridas) */
+.indicator {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+}
+.ind-urgent { background-color: #ff4b4b; }
+.ind-normal { background-color: #ffa421; }
+.ind-low { background-color: #00c0f2; }
+.ind-black { background-color: #111111; border: 1px solid #666; }
+.ind-green { background-color: #18B551; }
+
+/* -----------------------------------------------------------
+    COLUNA 1: Min-Heap (Fundo claro e texto preto) 
+    ----------------------------------------------------------- */
+.urgency-1 { 
+    border-left: 6px solid #ff4b4b; 
+    background-color: rgba(255, 75, 75, 0.25) !important; 
+    color: #000000 !important;
+}
+.urgency-3 { 
+    border-left: 6px solid #ffa421; 
+    background-color: rgba(255, 164, 33, 0.25) !important; 
+    color: #000000 !important;
+}
+.urgency-5 { 
+    border-left: 6px solid #00c0f2; 
+    background-color: rgba(0, 192, 242, 0.25) !important; 
+    color: #000000 !important;
+}
+.urgency-1 p, .urgency-3 p, .urgency-5 p,
+.urgency-1 h4, .urgency-3 h4, .urgency-5 h4 {
+    color: #111111 !important;
+}
+
+/* -----------------------------------------------------------
+    COLUNA 2: Árvore Red-Black 
+    ----------------------------------------------------------- */
+.rb-red { 
+    border: 2px solid rgba(255, 75, 75, 0.6); 
+    background-color: rgba(255, 75, 75, 0.15) !important; 
+    color: #000000 !important;
+}
+.rb-red p, .rb-red h4 { color: #111111 !important; }
+
+.rb-black { 
+    border: 2px solid #222222; 
+    background-color: rgba(40, 40, 40, 0.9) !important; 
+    color: #ffffff !important;
+}
+.rb-black p, .rb-black h4 { color: #f0f0f0 !important; }
+
+/* -----------------------------------------------------------
+    COLUNA 3: Cache AVL 
+    ----------------------------------------------------------- */
+.avl-node { 
+    border-left: 6px solid #18B551; 
+    background-color: rgba(24, 181, 81, 0.15) !important; 
+    color: #000000 !important;
+} 
+.avl-node p, .avl-node h4 { color: #111111 !important; }
