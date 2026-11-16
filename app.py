@@ -8,35 +8,82 @@ import time
 from src.entities import Document, Worker
 from src.orchestrator import PipelineOrchestrator
 
-# 1. Configuração da Página e CSS Customizado (Tema Escuro/Claro)
+# 1. Configuração da Página e CSS Customizado
 st.set_page_config(page_title="Pipeline de IA", layout="wide", page_icon="🧠")
 
 st.markdown("""
 <style>
-    /* Estilos dos Cards do Kanban */
+    /* Estilos base dos Cards do Kanban */
     .kanban-card {
         padding: 15px;
         border-radius: 8px;
         margin-bottom: 12px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        background-color: #262730; /* Fundo escuro padrão Streamlit */
+        background-color: #262730; 
         color: white;
         font-family: sans-serif;
     }
     .kanban-card h4 { margin: 0 0 10px 0; font-size: 16px; }
     .kanban-card p { margin: 0; font-size: 14px; color: #cccccc; }
     
-    /* Cores de Prioridade da Min-Heap */
-    .urgency-1 { border-left: 6px solid #ff4b4b; } /* Urgente (Vermelho) */
-    .urgency-3 { border-left: 6px solid #ffa421; } /* Normal (Laranja) */
-    .urgency-5 { border-left: 6px solid #00c0f2; } /* Baixa (Azul) */
+    /* -----------------------------------------------------------
+       COLUNA 1: Min-Heap (Fundo claro e texto preto) 
+       ----------------------------------------------------------- */
+    .urgency-1 { 
+        border-left: 6px solid #ff4b4b; 
+        background-color: rgba(255, 75, 75, 0.25) !important; 
+        color: #000000 !important;
+    }
+    .urgency-3 { 
+        border-left: 6px solid #ffa421; 
+        background-color: rgba(255, 164, 33, 0.25) !important; 
+        color: #000000 !important;
+    }
+    .urgency-5 { 
+        border-left: 6px solid #00c0f2; 
+        background-color: rgba(0, 192, 242, 0.25) !important; 
+        color: #000000 !important;
+    }
+    /* Força os textos da heap a ficarem escuros */
+    .urgency-1 p, .urgency-3 p, .urgency-5 p,
+    .urgency-1 h4, .urgency-3 h4, .urgency-5 h4 {
+        color: #111111 !important;
+    }
+
+    /* -----------------------------------------------------------
+       COLUNA 2: Árvore Red-Black (Cores fixas para contraste) 
+       ----------------------------------------------------------- */
+    /* NÓ VERMELHO: Fundo claro, texto preto */
+    .rb-red { 
+        border: 2px solid rgba(255, 75, 75, 0.6); 
+        background-color: rgba(255, 75, 75, 0.15) !important; 
+        color: #000000 !important;
+    }
+    .rb-red p, .rb-red h4 {
+        color: #111111 !important;
+    }
     
-    /* Cores da Árvore Red-Black */
-    .rb-red { border: 2px solid #ff4b4b; background-color: #3b2020; }
-    .rb-black { border: 2px solid #555555; background-color: #1e1e1e; }
+    /* NÓ PRETO: Fundo escuro real, texto branco */
+    .rb-black { 
+        border: 2px solid #222222; 
+        background-color: rgba(0, 0, 0, 0.7) !important; 
+        color: #ffffff !important;
+    }
+    .rb-black p, .rb-black h4 {
+        color: #f0f0f0 !important;
+    }
     
-    /* Cor do Cache (AVL) */
-    .avl-node { border-left: 6px solid #18B551; } /* Verde estilo Neoenergia */
+    /* -----------------------------------------------------------
+       COLUNA 3: Cache AVL (Fundo com leve opacidade verde) 
+       ----------------------------------------------------------- */
+    .avl-node { 
+        border-left: 6px solid #18B551; 
+        background-color: rgba(24, 181, 81, 0.15) !important; 
+        color: #000000 !important;
+    } 
+    .avl-node p, .avl-node h4 {
+        color: #111111 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -85,16 +132,12 @@ with st.sidebar:
         if ativos:
             w_node = random.choice(ativos)
             
-            # 1. Salva os dados ANTES de limpar o nó da Red-Black
             worker_name = w_node.value.name
             worker_id = w_node.value.worker_id
             
-            # 2. Executa a finalização (que seta value = None internamente)
             pipeline.finish_processing(worker_id)
-            
-            # 3. Exibe o toast usando a string salva
             st.toast(f"✅ {worker_name} concluído!", icon="💾")
-            
+
     st.divider()
     st.subheader("Modo Automático")
     auto_run = st.button("🚀 Rodar Simulação (10 Ticks)", type="primary", use_container_width=True)
@@ -140,7 +183,6 @@ def render_ui():
             st.subheader("⚙️ Processando (Red-Black)")
             for node in ativos:
                 w = node.value
-                # Mostra visualmente a cor do nó na árvore
                 rb_class = "rb-red" if node.color == "RED" else "rb-black"
                 cor_label = "🔴 Nó Vermelho" if node.color == "RED" else "⚫ Nó Preto"
                 if w.current_doc:
@@ -154,7 +196,7 @@ def render_ui():
                     
         with col_avl:
             st.subheader("💾 Histórico (AVL)")
-            for doc in processados[::-1]: # Mostra os mais recentes no topo
+            for doc in processados[::-1]:
                 st.markdown(f"""
                 <div class="kanban-card avl-node">
                     <h4>✅ {doc.title}</h4>
@@ -165,26 +207,22 @@ def render_ui():
 # Primeira renderização (estado atual)
 render_ui()
 
-# 6. Motor de Simulação (se o botão automático for clicado)
+# 6. Motor de Simulação
 if auto_run:
     for tick in range(1, 11):
-        # Lógica de inserção (50% chance)
         if random.random() > 0.5:
-            doc = Document(st.session_state.doc_id_seq, f"Doc_{st.session_state.doc_id_seq}", random.choice([1,3,5]), 5.0)
+            doc = Document(st.session_state.doc_id_seq, f"Doc_{st.session_state.doc_id_seq}", random.choice([1,3,5]), round(random.uniform(1.0, 15.0), 1))
             if pipeline.receive_document(doc): st.session_state.doc_id_seq += 1
             
-        # Lógica de alocação
         ativos_atuais = get_active_workers(pipeline.worker_pool.root, pipeline.worker_pool)
         if len(pipeline.doc_queue) > 0 and len(ativos_atuais) < 4:
             w = Worker(st.session_state.worker_id_seq, f"Worker-{st.session_state.worker_id_seq}")
             pipeline.assign_worker(w)
             st.session_state.worker_id_seq += 1
             
-        # Lógica de conclusão (40% chance)
         ativos_atuais = get_active_workers(pipeline.worker_pool.root, pipeline.worker_pool)
         if ativos_atuais and random.random() > 0.6:
             pipeline.finish_processing(random.choice(ativos_atuais).value.worker_id)
 
-        # Atualiza a UI e pausa
         render_ui()
         time.sleep(1.2)
