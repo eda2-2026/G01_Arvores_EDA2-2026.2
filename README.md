@@ -14,7 +14,7 @@
 
 Assista ao vídeo explicativo detalhando as decisões arquiteturais do projeto, a implementação das três estruturas de dados sob a metodologia TDD e a demonstração do fluxo na interface Streamlit:
 
-[![Apresentação do Projeto](https://img.youtube.com/vi/INSERIR_ID_DO_VIDEO/maxresdefault.jpg)](https://youtu.be/INSERIR_ID_DO_VIDEO)
+[Apresentação do Projeto](https://youtu.be/Jg-lQ0E_TJs)
 
 
 
